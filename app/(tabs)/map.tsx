@@ -1,43 +1,129 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import {
+    Image,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { chiclayoAccommodations, chiclayoExperiences, chiclayoRestaurants } from '../../lib/mockData';
+import { Accommodation, LocalExperience, Restaurant } from '../../lib/types';
+
+type PlaceType = 'all' | 'accommodation' | 'restaurant' | 'experience';
 
 export default function MapScreen() {
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Mapa Interactivo</Text>
-      </View>
+  const [selectedType, setSelectedType] = useState<PlaceType>('all');
+  const [selectedPriceRange, setSelectedPriceRange] = useState<'all' | 'low' | 'medium' | 'high'>('all');
 
-      <View style={styles.mapPlaceholder}>
-        <MaterialCommunityIcons name="map" size={80} color="#00d4ff" />
-        <Text style={styles.placeholderText}>Mapa de Chiclayo y Alrededores</Text>
-        <Text style={styles.placeholderSubtext}>
-          Próximamente: Lugares turísticos, hospedajes y restaurantes con filtros de autenticidad peruana
-        </Text>
-      </View>
+  const filterPlaces = () => {
+    let places: (Accommodation | Restaurant | LocalExperience)[] = [
+      ...chiclayoAccommodations,
+      ...chiclayoRestaurants,
+      ...chiclayoExperiences
+    ];
 
-      <View style={styles.filterSection}>
-        <Text style={styles.filterTitle}>Filtros de Autenticidad Peruana</Text>
-        <View style={styles.filterGrid}>
-          <View style={styles.filterCard}>
-            <MaterialCommunityIcons name="leaf" size={32} color="#4caf50" />
-            <Text style={styles.filterLabel}>Sostenible</Text>
+    if (selectedType !== 'all') {
+      places = places.filter(place => {
+        if (selectedType === 'accommodation') return 'type' in place;
+        if (selectedType === 'restaurant') return 'cuisine' in place;
+        if (selectedType === 'experience') return 'category' in place;
+        return true;
+      });
+    }
+
+    if (selectedPriceRange !== 'all') {
+      places = places.filter(place => place.priceRange === selectedPriceRange);
+    }
+
+    return places;
+  };
+
+  const renderPlaceCard = (place: Accommodation | Restaurant | LocalExperience) => (
+    <View key={place.id} style={styles.placeCard}>
+      <Image source={{ uri: place.imageUrl }} style={styles.placeImage} />
+      <View style={styles.placeDetails}>
+        <Text style={styles.placeName}>{place.name}</Text>
+        <Text style={styles.placeDescription} numberOfLines={2}>{place.description}</Text>
+        <View style={styles.placeMetadata}>
+          <View style={styles.ratingContainer}>
+            <MaterialCommunityIcons name="star" size={16} color="#FFD700" />
+            <Text style={styles.ratingText}>{place.rating}</Text>
           </View>
-          <View style={styles.filterCard}>
-            <MaterialCommunityIcons name="people" size={32} color="#2196f3" />
-            <Text style={styles.filterLabel}>Comunidad</Text>
-          </View>
-          <View style={styles.filterCard}>
-            <MaterialCommunityIcons name="store" size={32} color="#ff9800" />
-            <Text style={styles.filterLabel}>Pequeño Negocio</Text>
-          </View>
-          <View style={styles.filterCard}>
-            <MaterialCommunityIcons name="heart" size={32} color="#e74c3c" />
-            <Text style={styles.filterLabel}>Artesanía Local</Text>
+          <View style={styles.tagContainer}>
+            {place.tags.slice(0, 2).map(tag => (
+              <View key={tag} style={styles.tag}>
+                <Text style={styles.tagText}>{tag}</Text>
+              </View>
+            ))}
           </View>
         </View>
       </View>
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Mapa de Chiclayo</Text>
+        <Text style={styles.subtitle}>Experiencias Auténticas en Lambayeque</Text>
+      </View>
+
+      <View style={styles.filterContainer}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterScroll}>
+          {['all', 'accommodation', 'restaurant', 'experience'].map(type => (
+            <TouchableOpacity
+              key={type}
+              style={[
+                styles.filterButton,
+                selectedType === type && styles.filterButtonActive
+              ]}
+              onPress={() => setSelectedType(type as PlaceType)}
+            >
+              <Text style={[
+                styles.filterButtonText,
+                selectedType === type && styles.filterButtonTextActive
+              ]}>
+                {type === 'all' && 'Todos'}
+                {type === 'accommodation' && 'Hospedajes'}
+                {type === 'restaurant' && 'Restaurantes'}
+                {type === 'experience' && 'Experiencias'}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+
+      <View style={styles.priceFilterContainer}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterScroll}>
+          {['all', 'low', 'medium', 'high'].map(range => (
+            <TouchableOpacity
+              key={range}
+              style={[
+                styles.filterButton,
+                selectedPriceRange === range && styles.filterButtonActive
+              ]}
+              onPress={() => setSelectedPriceRange(range as 'all' | 'low' | 'medium' | 'high')}
+            >
+              <Text style={[
+                styles.filterButtonText,
+                selectedPriceRange === range && styles.filterButtonTextActive
+              ]}>
+                {range === 'all' && 'Todos los Precios'}
+                {range === 'low' && 'Económico'}
+                {range === 'medium' && 'Medio'}
+                {range === 'high' && 'Premium'}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+
+      <ScrollView style={styles.placesContainer}>
+        {filterPlaces().map(renderPlaceCard)}
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -56,55 +142,102 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     color: '#fff',
+    marginBottom: 4,
   },
-  mapPlaceholder: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  subtitle: {
+    fontSize: 14,
+    color: '#a0a0a0',
+  },
+  filterContainer: {
+    paddingVertical: 10,
     backgroundColor: '#0f3460',
-    margin: 20,
-    borderRadius: 12,
   },
-  placeholderText: {
+  priceFilterContainer: {
+    paddingVertical: 10,
+    backgroundColor: '#16213e',
+  },
+  filterScroll: {
+    paddingHorizontal: 10,
+  },
+  filterButton: {
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    marginHorizontal: 5,
+    borderRadius: 20,
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#00d4ff',
+  },
+  filterButtonActive: {
+    backgroundColor: '#00d4ff',
+  },
+  filterButtonText: {
     color: '#00d4ff',
-    fontSize: 18,
-    fontWeight: '600',
-    marginTop: 16,
+    fontSize: 12,
+    fontWeight: '500',
   },
-  placeholderSubtext: {
+  filterButtonTextActive: {
+    color: '#1a1a2e',
+  },
+  placesContainer: {
+    flex: 1,
+    paddingHorizontal: 10,
+  },
+  placeCard: {
+    flexDirection: 'row',
+    backgroundColor: '#16213e',
+    borderRadius: 10,
+    marginVertical: 10,
+    overflow: 'hidden',
+  },
+  placeImage: {
+    width: 120,
+    height: 120,
+    resizeMode: 'cover',
+  },
+  placeDetails: {
+    flex: 1,
+    padding: 15,
+    justifyContent: 'space-between',
+  },
+  placeName: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  placeDescription: {
     color: '#a0a0a0',
     fontSize: 12,
-    marginTop: 8,
-    textAlign: 'center',
-    paddingHorizontal: 20,
+    marginBottom: 10,
   },
-  filterSection: {
-    padding: 20,
-  },
-  filterTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#00d4ff',
-    marginBottom: 15,
-  },
-  filterGrid: {
+  placeMetadata: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-  },
-  filterCard: {
-    flex: 1,
-    minWidth: '45%',
-    backgroundColor: '#16213e',
-    padding: 15,
-    borderRadius: 10,
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
-  filterLabel: {
-    color: '#fff',
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  ratingText: {
+    color: '#FFD700',
+    marginLeft: 5,
     fontSize: 12,
-    marginTop: 8,
-    textAlign: 'center',
+  },
+  tagContainer: {
+    flexDirection: 'row',
+    gap: 5,
+  },
+  tag: {
+    backgroundColor: '#0f3460',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+  tagText: {
+    color: '#00d4ff',
+    fontSize: 10,
     fontWeight: '500',
   },
 });

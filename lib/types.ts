@@ -88,3 +88,56 @@ export interface LocalExperience {
   price: number; // In Peruvian Soles
   imageUrl?: string;
 }
+
+export interface LocalPlace {
+  id: string;
+  name: string;
+  description: string;
+  location: {
+    address: string;
+    city: string;
+    region: string;
+    coordinates: {
+      latitude: number;
+      longitude: number;
+    };
+  };
+  contact: {
+    phone?: string;
+    website?: string;
+    email?: string;
+  };
+  rating: number;
+  priceRange: 'low' | 'medium' | 'high';
+  tags: string[]; // 'sustainable', 'community', 'small-business', 'local', 'authentic'
+  imageUrl: string;
+}
+
+export interface Accommodation extends LocalPlace {
+  type: 'hostel' | 'hotel' | 'homestay' | 'guesthouse';
+  amenities: string[];
+  roomTypes: string[];
+  checkIn: string;
+  checkOut: string;
+}
+
+export interface Restaurant extends LocalPlace {
+  cuisine: string[];
+  specialties: string[];
+  openingHours: {
+    open: string;
+    close: string;
+  };
+  reservations: boolean;
+}
+
+export interface LocalExperience extends LocalPlace {
+  category: 'workshop' | 'tour' | 'class' | 'cultural-activity';
+  duration: number; // in minutes
+  groupSize: {
+    min: number;
+    max: number;
+  };
+  language: string[];
+  includedServices: string[];
+}
