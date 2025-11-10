@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
     ActivityIndicator,
     Alert,
@@ -10,42 +10,66 @@ import {
     View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { DayCard } from '../../components/DayCard';
+import { Colors } from '../../constants/Colors';
 import { useAuth } from '../../lib/AuthContext';
+import { GeminiItineraryResponse, generateItineraryWithGemini, isGeminiConfigured } from '../../lib/services/geminiService';
+import { ErrorHandler } from '../../lib/services/errorHandler';
 
 export default function ItineraryScreen() {
   const { user } = useAuth();
   const [loadingAI, setLoadingAI] = useState(false);
-  const [itinerary, setItinerary] = useState(null);
+  const [itinerary, setItinerary] = useState<GeminiItineraryResponse | null>(null);
+  const [expandedDay, setExpandedDay] = useState<number | null>(null);
 
-  const handleGenerateItinerary = async () => {
+  const handleGenerateItinerary = useCallback(async () => {
     setLoadingAI(true);
+    setExpandedDay(null); // Reset expanded day
     try {
-      // TODO: Call AI API to generate itinerary
-      // For now, show a placeholder
-      Alert.alert('IA', 'Generando itinerario personalizado basado en tu perfil...');
-      
-      // Simulate API call
-      setTimeout(() => {
-        setItinerary({
-          destination: 'Chiclayo, Perú',
-          days: 3,
-          activities: [
-            { day: 1, name: 'Museo Túmulo Real', category: 'Atracción' },
-            { day: 1, name: 'Ceviche en Restaurante Local', category: 'Comida' },
-            { day: 2, name: 'Chan Chan (Trujillo)', category: 'Arqueología' },
-            { day: 3, name: 'Mercado de Moshoqueque', category: 'Experiencia Local' },
-          ],
-        });
-        Alert.alert('Éxito', '¡Itinerario generado! Revisa los detalles abajo.');
-      }, 2000);
+      // Verificar si Gemini está configurado
+      if (!isGeminiConfigured()) {
+        Alert.alert(
+          'API no configurada',
+          'Gemini API no está configurada. Verifica que EXPO_PUBLIC_GEMINI_API_KEY esté en tu archivo .env',
+          [{ text: 'OK' }]
+        );
+        setLoadingAI(false);
+        return;
+      }
+
+      // Generar con Gemini API
+      const result = await generateItineraryWithGemini({
+        destination: 'Chiclayo, Perú',
+        days: 3,
+        interests: ['Arqueología', 'Gastronomía Peruana', 'Cultura Local'],
+        budget: 'medium',
+        region: 'Norte del Perú',
+      });
+
+      setItinerary(result);
+      // Expandir el primer día por defecto
+      if (result.dayItineraries.length > 0) {
+        setExpandedDay(1);
+      }
+      // El itinerario se generó exitosamente (puede ser de Gemini o fallback)
+      // No mostrar alerta - el usuario ya ve el resultado
     } catch (error: any) {
-      Alert.alert('Error', error.message);
+      // Solo mostrar error si realmente falló todo (incluido el fallback)
+      // Pero esto no debería pasar porque generateItineraryWithGemini siempre retorna algo
+      console.error('Error inesperado generando itinerario:', error);
+      const appError = ErrorHandler.formatGenericError(error, 'generación de itinerario');
+      ErrorHandler.log(appError);
+      Alert.alert('Error', 'No se pudo generar el itinerario. Por favor, intenta de nuevo.');
     } finally {
       setLoadingAI(false);
     }
-  };
+  }, []);
 
-  const handleSOS = () => {
+  const toggleDay = useCallback((day: number) => {
+    setExpandedDay(expandedDay === day ? null : day);
+  }, [expandedDay]);
+
+  const handleSOS = useCallback(() => {
     Alert.alert(
       'Botón SOS',
       '¿Necesitas ayuda urgente? Se notificará a emergencias locales en Perú.',
@@ -54,7 +78,7 @@ export default function ItineraryScreen() {
         { text: 'Confirmar SOS', onPress: () => Alert.alert('SOS Enviado', 'Emergencias locales contactadas.'), style: 'destructive' },
       ]
     );
-  };
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -68,11 +92,11 @@ export default function ItineraryScreen() {
         {/* SOS and Alerts Bar */}
         <View style={styles.alertBar}>
           <TouchableOpacity style={styles.sosButton} onPress={handleSOS}>
-            <MaterialCommunityIcons name="alert-circle" size={20} color="#fff" />
+            <MaterialCommunityIcons name="alert-circle" size={20} color={Colors.white} />
             <Text style={styles.sosText}>SOS/Emergencia</Text>
           </TouchableOpacity>
           <View style={styles.alertIcon}>
-            <MaterialCommunityIcons name="bell-outline" size={24} color="#00d4ff" />
+            <MaterialCommunityIcons name="bell-outline" size={24} color={Colors.blue} />
             <View style={styles.alertBadge}>
               <Text style={styles.alertBadgeText}>2</Text>
             </View>
@@ -101,10 +125,10 @@ export default function ItineraryScreen() {
             disabled={loadingAI}
           >
             {loadingAI ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color={Colors.white} />
             ) : (
               <>
-                <MaterialCommunityIcons name="brain" size={24} color="#fff" />
+                <MaterialCommunityIcons name="brain" size={24} color={Colors.white} />
                 <Text style={styles.aiButtonText}>Generar Itinerario con IA</Text>
               </>
             )}
@@ -117,18 +141,42 @@ export default function ItineraryScreen() {
         {/* Itinerary Display */}
         {itinerary && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>📍 Tu Itinerario: {itinerary.destination}</Text>
-            {itinerary.activities.map((activity, index) => (
-              <View key={index} style={styles.activityCard}>
-                <View style={styles.activityDay}>
-                  <Text style={styles.activityDayText}>Día {activity.day}</Text>
-                </View>
-                <View style={styles.activityContent}>
-                  <Text style={styles.activityName}>{activity.name}</Text>
-                  <Text style={styles.activityCategory}>{activity.category}</Text>
-                </View>
+            <View style={styles.itineraryHeader}>
+              <View>
+                <Text style={styles.sectionTitle}>📍 Tu Itinerario: {itinerary.destination}</Text>
+                <Text style={styles.itinerarySubtitle}>
+                  {itinerary.days} días • Total estimado: S/. {itinerary.totalEstimatedCost}
+                </Text>
               </View>
+            </View>
+
+            {/* Days List */}
+            {itinerary.dayItineraries.map((dayItinerary) => (
+              <TouchableOpacity
+                key={dayItinerary.day}
+                onPress={() => toggleDay(dayItinerary.day)}
+                activeOpacity={0.8}
+              >
+                <DayCard
+                  dayItinerary={dayItinerary}
+                  isExpanded={expandedDay === dayItinerary.day}
+                />
+              </TouchableOpacity>
             ))}
+
+            {/* Total Summary */}
+            <View style={styles.totalSummary}>
+              <View style={styles.totalSummaryRow}>
+                <Text style={styles.totalSummaryLabel}>Costo Total Estimado:</Text>
+                <Text style={styles.totalSummaryAmount}>S/. {itinerary.totalEstimatedCost}</Text>
+              </View>
+              <View style={styles.totalSummaryRow}>
+                <Text style={styles.totalSummaryLabel}>Promedio por día:</Text>
+                <Text style={styles.totalSummaryAmount}>
+                  S/. {Math.round(itinerary.totalEstimatedCost / itinerary.days)}
+                </Text>
+              </View>
+            </View>
           </View>
         )}
 
@@ -149,7 +197,7 @@ export default function ItineraryScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>✨ Experiencias Auténticas de Perú</Text>
           <View style={styles.experienceCard}>
-            <MaterialCommunityIcons name="leaf" size={24} color="#4caf50" />
+            <MaterialCommunityIcons name="leaf" size={24} color={Colors.green} />
             <View style={styles.experienceContent}>
               <Text style={styles.experienceName}>Comunidad Agrícola Chiclayano</Text>
               <View style={styles.tagContainer}>
@@ -163,7 +211,7 @@ export default function ItineraryScreen() {
             </View>
           </View>
           <View style={styles.experienceCard}>
-            <MaterialCommunityIcons name="store" size={24} color="#ff9800" />
+            <MaterialCommunityIcons name="store" size={24} color={Colors.warning} />
             <View style={styles.experienceContent}>
               <Text style={styles.experienceName}>Taller de Cerámica Local</Text>
               <View style={styles.tagContainer}>
@@ -177,7 +225,7 @@ export default function ItineraryScreen() {
             </View>
           </View>
           <View style={styles.experienceCard}>
-            <MaterialCommunityIcons name="bowl-mix" size={24} color="#e74c3c" />
+            <MaterialCommunityIcons name="bowl-mix" size={24} color={Colors.error} />
             <View style={styles.experienceContent}>
               <Text style={styles.experienceName}>Cooking Class - Gastronomía Peruana</Text>
               <View style={styles.tagContainer}>
@@ -199,22 +247,23 @@ export default function ItineraryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1a2e',
+    backgroundColor: Colors.background,
   },
   header: {
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#16213e',
+    borderBottomColor: Colors.border,
+    backgroundColor: Colors.white,
   },
   greeting: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#fff',
+    color: Colors.textPrimary,
     marginBottom: 4,
   },
   subtitle: {
     fontSize: 14,
-    color: '#a0a0a0',
+    color: Colors.textSecondary,
   },
   alertBar: {
     flexDirection: 'row',
@@ -222,20 +271,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: '#0f3460',
+    backgroundColor: Colors.blue,
     marginTop: 10,
   },
   sosButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#e74c3c',
+    backgroundColor: Colors.error,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 6,
     flex: 1,
   },
   sosText: {
-    color: '#fff',
+    color: Colors.white,
     marginLeft: 8,
     fontWeight: '600',
     fontSize: 12,
@@ -248,7 +297,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -5,
     right: -5,
-    backgroundColor: '#e74c3c',
+    backgroundColor: Colors.error,
     borderRadius: 10,
     width: 20,
     height: 20,
@@ -256,77 +305,85 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   alertBadgeText: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 10,
     fontWeight: 'bold',
   },
   section: {
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#16213e',
+    borderBottomColor: Colors.border,
+    backgroundColor: Colors.white,
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#00d4ff',
+    color: Colors.blue,
     marginBottom: 15,
   },
   alertCard: {
-    backgroundColor: '#16213e',
+    backgroundColor: Colors.backgroundSecondary,
     padding: 12,
     borderRadius: 8,
     marginBottom: 10,
     borderLeftWidth: 4,
-    borderLeftColor: '#e74c3c',
+    borderLeftColor: Colors.error,
   },
   alertCardTitle: {
-    color: '#fff',
+    color: Colors.textPrimary,
     fontWeight: '600',
     marginBottom: 4,
   },
   alertCardText: {
-    color: '#a0a0a0',
+    color: Colors.textSecondary,
     fontSize: 12,
     lineHeight: 16,
   },
   aiButton: {
-    backgroundColor: '#0f3460',
+    backgroundColor: Colors.blue,
     padding: 15,
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: '#00d4ff',
+    borderColor: Colors.blueDark,
     marginBottom: 10,
+    shadowColor: Colors.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   aiButtonText: {
-    color: '#fff',
+    color: Colors.white,
     marginLeft: 10,
     fontWeight: '600',
     fontSize: 14,
   },
   aiSubtitle: {
-    color: '#a0a0a0',
+    color: Colors.textSecondary,
     fontSize: 12,
     lineHeight: 16,
   },
   activityCard: {
     flexDirection: 'row',
-    backgroundColor: '#16213e',
+    backgroundColor: Colors.backgroundSecondary,
     borderRadius: 8,
     overflow: 'hidden',
     marginBottom: 10,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   activityDay: {
-    backgroundColor: '#0f3460',
+    backgroundColor: Colors.blue,
     padding: 12,
     justifyContent: 'center',
     alignItems: 'center',
     minWidth: 50,
   },
   activityDayText: {
-    color: '#00d4ff',
+    color: Colors.white,
     fontWeight: 'bold',
     fontSize: 12,
   },
@@ -335,45 +392,49 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   activityName: {
-    color: '#fff',
+    color: Colors.textPrimary,
     fontWeight: '600',
     marginBottom: 4,
   },
   activityCategory: {
-    color: '#a0a0a0',
+    color: Colors.textSecondary,
     fontSize: 12,
   },
   expenseCard: {
-    backgroundColor: '#16213e',
+    backgroundColor: Colors.backgroundSecondary,
     padding: 12,
     borderRadius: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   expenseLabel: {
-    color: '#a0a0a0',
+    color: Colors.textSecondary,
   },
   expenseAmount: {
-    color: '#00d4ff',
+    color: Colors.blue,
     fontWeight: 'bold',
     fontSize: 16,
   },
   experienceCard: {
     flexDirection: 'row',
-    backgroundColor: '#16213e',
+    backgroundColor: Colors.backgroundSecondary,
     padding: 12,
     borderRadius: 8,
     marginBottom: 10,
     alignItems: 'flex-start',
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   experienceContent: {
     flex: 1,
     marginLeft: 12,
   },
   experienceName: {
-    color: '#fff',
+    color: Colors.textPrimary,
     fontWeight: '600',
     marginBottom: 8,
   },
@@ -383,14 +444,45 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   tag: {
-    backgroundColor: '#0f3460',
+    backgroundColor: Colors.blue,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 4,
   },
   tagText: {
-    color: '#00d4ff',
+    color: Colors.white,
     fontSize: 10,
     fontWeight: '500',
+  },
+  itineraryHeader: {
+    marginBottom: 20,
+  },
+  itinerarySubtitle: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    marginTop: 4,
+  },
+  totalSummary: {
+    marginTop: 20,
+    padding: 16,
+    backgroundColor: Colors.backgroundSecondary,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  totalSummaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  totalSummaryLabel: {
+    fontSize: 14,
+    color: Colors.textSecondary,
+  },
+  totalSummaryAmount: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: Colors.blue,
   },
 });
