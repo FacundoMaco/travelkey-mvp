@@ -12,6 +12,7 @@ import {
     View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Colors } from '../../constants/Colors';
 import { useAuth } from '../../lib/AuthContext';
 import { auth } from '../../lib/firebase';
 
@@ -76,7 +77,7 @@ export default function ProfileScreen() {
           <TextInput
             style={styles.input}
             placeholder="Ingresa tu edad"
-            placeholderTextColor="#a0a0a0"
+            placeholderTextColor={Colors.textSecondary}
             value={age}
             onChangeText={setAge}
             keyboardType="number-pad"
@@ -136,7 +137,7 @@ export default function ProfileScreen() {
           disabled={loading}
         >
           {loading ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={Colors.white} />
           ) : (
             <Text style={styles.saveButtonText}>Guardar Perfil</Text>
           )}
@@ -154,41 +155,43 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1a2e',
+    backgroundColor: Colors.background,
   },
   header: {
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#16213e',
+    borderBottomColor: Colors.border,
+    backgroundColor: Colors.white,
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#fff',
+    color: Colors.textPrimary,
     marginBottom: 8,
   },
   email: {
     fontSize: 14,
-    color: '#a0a0a0',
+    color: Colors.textSecondary,
   },
   section: {
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#16213e',
+    borderBottomColor: Colors.border,
+    backgroundColor: Colors.white,
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#00d4ff',
+    color: Colors.blue,
     marginBottom: 15,
   },
   input: {
-    backgroundColor: '#16213e',
-    color: '#fff',
+    backgroundColor: Colors.backgroundSecondary,
+    color: Colors.textPrimary,
     padding: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#0f3460',
+    borderColor: Colors.border,
     fontSize: 14,
   },
   interestsGrid: {
@@ -201,20 +204,20 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#0f3460',
+    borderColor: Colors.border,
     backgroundColor: 'transparent',
   },
   interestButtonActive: {
-    backgroundColor: '#0f3460',
-    borderColor: '#00d4ff',
+    backgroundColor: Colors.blue,
+    borderColor: Colors.blueDark,
   },
   interestText: {
-    color: '#a0a0a0',
+    color: Colors.textSecondary,
     fontSize: 12,
     fontWeight: '500',
   },
   interestTextActive: {
-    color: '#00d4ff',
+    color: Colors.white,
   },
   budgetOption: {
     flexDirection: 'row',
@@ -227,39 +230,44 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: '#0f3460',
+    borderColor: Colors.border,
     marginRight: 12,
   },
   radioButtonSelected: {
-    backgroundColor: '#00d4ff',
-    borderColor: '#00d4ff',
+    backgroundColor: Colors.blue,
+    borderColor: Colors.blue,
   },
   budgetLabel: {
-    color: '#fff',
+    color: Colors.textPrimary,
     fontSize: 14,
   },
   saveButton: {
     margin: 20,
-    backgroundColor: '#0f3460',
+    backgroundColor: Colors.blue,
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
+    shadowColor: Colors.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   saveButtonText: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 16,
     fontWeight: 'bold',
   },
   logoutButton: {
     margin: 20,
     marginTop: 0,
-    backgroundColor: '#e74c3c',
+    backgroundColor: Colors.error,
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
   },
   logoutButtonText: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 16,
     fontWeight: 'bold',
   },

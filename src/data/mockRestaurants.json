@@ -1,0 +1,97 @@
+[
+  {
+    "id": "restaurant-1",
+    "name": "Central Restaurante",
+    "description": "Restaurante de alta cocina peruana dirigido por el chef Virgilio Martínez. Ofrece una experiencia gastronómica única con ingredientes de las diferentes altitudes del Perú.",
+    "price": 150,
+    "rating": 4.9,
+    "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400",
+    "coordinates": {
+      "latitude": -12.0464,
+      "longitude": -77.0428
+    },
+    "category": "restaurant",
+    "address": "Av. Pedro de Osma 301, Barranco, Lima",
+    "phone": "+51 1 242-8515",
+    "website": "https://centralrestaurante.com.pe",
+    "cuisine": ["Peruana", "Alta Cocina", "Fusión"],
+    "openingHours": "12:30 - 15:30, 19:30 - 23:00",
+    "priceRange": "$$$$"
+  },
+  {
+    "id": "restaurant-2",
+    "name": "La Mar Cebichería",
+    "description": "Cebichería de renombre internacional especializada en pescados y mariscos frescos. Ambiente casual y moderno con el mejor cebiche de Lima.",
+    "price": 45,
+    "rating": 4.7,
+    "image": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400",
+    "coordinates": {
+      "latitude": -12.0464,
+      "longitude": -77.0428
+    },
+    "category": "restaurant",
+    "address": "Av. La Mar 770, Miraflores, Lima",
+    "phone": "+51 1 421-3365",
+    "website": "https://lamarcebicheria.com",
+    "cuisine": ["Peruana", "Mariscos", "Cebiche"],
+    "openingHours": "12:00 - 17:00",
+    "priceRange": "$$$"
+  },
+  {
+    "id": "restaurant-3",
+    "name": "Chicha por Gastón Acurio",
+    "description": "Restaurante tradicional cusqueño con toques modernos. Ofrece platos típicos de la sierra peruana en un ambiente acogedor y familiar.",
+    "price": 35,
+    "rating": 4.6,
+    "image": "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400",
+    "coordinates": {
+      "latitude": -13.5171,
+      "longitude": -71.9785
+    },
+    "category": "restaurant",
+    "address": "Calle Plateros 354, Cusco",
+    "phone": "+51 84 240-520",
+    "website": "https://chicha.com.pe",
+    "cuisine": ["Peruana", "Tradicional", "Sierra"],
+    "openingHours": "12:00 - 22:00",
+    "priceRange": "$$"
+  },
+  {
+    "id": "restaurant-4",
+    "name": "Zig Zag Restaurante",
+    "description": "Restaurante especializado en carnes y parrillas en Arequipa. Conocido por sus piedras calientes y ambiente rústico elegante.",
+    "price": 55,
+    "rating": 4.5,
+    "image": "https://images.unsplash.com/photo-1544148103-0773bf10d330?w=400",
+    "coordinates": {
+      "latitude": -16.4090,
+      "longitude": -71.5375
+    },
+    "category": "restaurant",
+    "address": "Calle Zela 210, Arequipa",
+    "phone": "+51 54 206-020",
+    "website": "https://zigzagrestaurante.com",
+    "cuisine": ["Carnes", "Parrilla", "Internacional"],
+    "openingHours": "18:00 - 23:00",
+    "priceRange": "$$$"
+  },
+  {
+    "id": "restaurant-5",
+    "name": "El Huacatay",
+    "description": "Restaurante familiar en el Valle Sagrado especializado en cocina andina tradicional. Ingredientes orgánicos locales y recetas ancestrales.",
+    "price": 25,
+    "rating": 4.4,
+    "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400",
+    "coordinates": {
+      "latitude": -13.2567,
+      "longitude": -72.2644
+    },
+    "category": "restaurant",
+    "address": "Urubamba, Valle Sagrado, Cusco",
+    "phone": "+51 84 201-790",
+    "website": "https://elhuacatay.com",
+    "cuisine": ["Andina", "Orgánica", "Tradicional"],
+    "openingHours": "11:00 - 21:00",
+    "priceRange": "$$"
+  }
+]

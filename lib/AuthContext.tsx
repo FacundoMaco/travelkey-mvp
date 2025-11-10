@@ -27,17 +27,59 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      // No longer setting loading here, just user
-      if (currentUser) {
-        setUser(currentUser);
-      } else {
-        setUser(null);
-      }
-      setIsLoading(false);
-    });
+    let unsubscribe: (() => void) | null = null;
+    let timeoutId: NodeJS.Timeout | null = null;
+    let isMounted = true;
 
-    return () => unsubscribe();
+    // Verificar que auth esté disponible
+    if (!auth) {
+      setIsLoading(false);
+      return;
+    }
+
+    // Timeout muy corto para carga rápida (500ms máximo)
+    timeoutId = setTimeout(() => {
+      if (isMounted) {
+        setIsLoading(false);
+      }
+    }, 500);
+
+    try {
+      unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        if (!isMounted) return;
+        
+        // Limpiar timeout si recibimos respuesta
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
+        }
+
+        if (currentUser) {
+          setUser(currentUser);
+        } else {
+          setUser(null);
+        }
+        setIsLoading(false);
+      });
+    } catch (error) {
+      // Si hay error, no bloquear la app
+      if (isMounted) {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+        setIsLoading(false);
+      }
+    }
+
+    return () => {
+      isMounted = false;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
 
   return (

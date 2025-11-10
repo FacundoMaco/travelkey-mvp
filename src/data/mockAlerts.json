@@ -1,0 +1,47 @@
+[
+  {
+    "id": "alert-1",
+    "title": "Alerta de Seguridad - Centro de Lima",
+    "description": "Se reportan robos menores en la zona del Centro Histórico durante las horas de la tarde. Se recomienda mayor precaución y evitar caminar solo después de las 18:00.",
+    "category": "security",
+    "severity": "medium",
+    "date": "2024-01-15T10:30:00Z",
+    "location": "Centro Histórico, Lima"
+  },
+  {
+    "id": "alert-2",
+    "title": "Pronóstico de Lluvias Intensas",
+    "description": "Se esperan lluvias intensas en la región de Cusco durante los próximos 3 días. Posibles interrupciones en el servicio de tren a Machu Picchu.",
+    "category": "weather",
+    "severity": "high",
+    "date": "2024-01-14T08:00:00Z",
+    "location": "Cusco y Valle Sagrado"
+  },
+  {
+    "id": "alert-3",
+    "title": "Cierre Temporal de Carretera Panamericana Sur",
+    "description": "La Panamericana Sur estará cerrada entre los kilómetros 45-50 por trabajos de mantenimiento. Desvío alternativo disponible por la carretera antigua.",
+    "category": "traffic",
+    "severity": "medium",
+    "date": "2024-01-13T06:00:00Z",
+    "location": "Panamericana Sur, Lima"
+  },
+  {
+    "id": "alert-4",
+    "title": "Recomendaciones de Salud - Altitud",
+    "description": "Para viajeros que visiten Cusco y Machu Picchu, se recomienda aclimatación gradual y consumo de mate de coca para prevenir el mal de altura.",
+    "category": "health",
+    "severity": "low",
+    "date": "2024-01-12T14:00:00Z",
+    "location": "Cusco y Machu Picchu"
+  },
+  {
+    "id": "alert-5",
+    "title": "Protestas en Centro de Arequipa",
+    "description": "Manifestaciones programadas en el centro de Arequipa el viernes 19 de enero. Se recomienda evitar la zona de la Plaza de Armas entre 14:00-18:00.",
+    "category": "security",
+    "severity": "medium",
+    "date": "2024-01-11T16:00:00Z",
+    "location": "Centro de Arequipa"
+  }
+]

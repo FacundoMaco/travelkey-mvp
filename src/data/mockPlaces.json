@@ -1,0 +1,97 @@
+[
+  {
+    "id": "place-1",
+    "name": "Machu Picchu",
+    "description": "La ciudadela inca más famosa del mundo, declarada Patrimonio de la Humanidad. Una maravilla arquitectónica construida en las alturas de los Andes peruanos.",
+    "price": 70,
+    "rating": 4.9,
+    "image": "https://images.unsplash.com/photo-1526392060635-9d6019884377?w=400",
+    "coordinates": {
+      "latitude": -13.1631,
+      "longitude": -72.5450
+    },
+    "category": "attraction",
+    "address": "Machu Picchu, Cusco",
+    "phone": "+51 84 211-038",
+    "website": "https://machupicchu.gob.pe",
+    "openingHours": "06:00 - 17:30",
+    "ticketPrice": 70,
+    "duration": "4-6 horas"
+  },
+  {
+    "id": "place-2",
+    "name": "Líneas de Nasca",
+    "description": "Misteriosos geoglifos gigantes grabados en el desierto de Nasca. Figuras geométricas y de animales visibles desde el aire que datan del 500 a.C.",
+    "price": 120,
+    "rating": 4.6,
+    "image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",
+    "coordinates": {
+      "latitude": -14.6969,
+      "longitude": -75.1305
+    },
+    "category": "attraction",
+    "address": "Desierto de Nasca, Ica",
+    "phone": "+51 56 522-293",
+    "website": "https://nasca.com.pe",
+    "openingHours": "08:00 - 16:00",
+    "ticketPrice": 120,
+    "duration": "2-3 horas"
+  },
+  {
+    "id": "place-3",
+    "name": "Islas Ballestas",
+    "description": "Conocidas como las 'Galápagos peruanas', estas islas albergan una increíble diversidad de vida marina: lobos marinos, pingüinos, aves guaneras y más.",
+    "price": 35,
+    "rating": 4.7,
+    "image": "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400",
+    "coordinates": {
+      "latitude": -13.8333,
+      "longitude": -76.2500
+    },
+    "category": "attraction",
+    "address": "Reserva Nacional de Paracas, Ica",
+    "phone": "+51 56 545-011",
+    "website": "https://paracas.com",
+    "openingHours": "08:00 - 15:00",
+    "ticketPrice": 35,
+    "duration": "2-3 horas"
+  },
+  {
+    "id": "place-4",
+    "name": "Valle del Colca",
+    "description": "Uno de los cañones más profundos del mundo, hogar del majestuoso cóndor andino. Paisajes espectaculares y pueblos tradicionales que mantienen sus costumbres ancestrales.",
+    "price": 25,
+    "rating": 4.8,
+    "image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",
+    "coordinates": {
+      "latitude": -15.5983,
+      "longitude": -71.5358
+    },
+    "category": "attraction",
+    "address": "Valle del Colca, Arequipa",
+    "phone": "+51 54 201-790",
+    "website": "https://colca.com",
+    "openingHours": "06:00 - 18:00",
+    "ticketPrice": 25,
+    "duration": "1 día completo"
+  },
+  {
+    "id": "place-5",
+    "name": "Lago Titicaca",
+    "description": "El lago navegable más alto del mundo, cuna de la civilización inca. Hogar de las islas flotantes de los Uros y la isla de Taquile con sus tradiciones únicas.",
+    "price": 40,
+    "rating": 4.5,
+    "image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",
+    "coordinates": {
+      "latitude": -15.7975,
+      "longitude": -69.4297
+    },
+    "category": "attraction",
+    "address": "Puno, Lago Titicaca",
+    "phone": "+51 51 365-088",
+    "website": "https://titicaca.com",
+    "openingHours": "07:00 - 17:00",
+    "ticketPrice": 40,
+    "duration": "1 día completo"
+  }
+]

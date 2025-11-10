@@ -55,7 +55,7 @@ export default function LoginScreen() {
             <Text style={styles.buttonText}>Entrar</Text>
           </TouchableOpacity>
         )}
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity onPress={() => router.replace('/(auth)/welcome')}>
           <Text style={styles.linkText}>Volver a la Bienvenida</Text>
         </TouchableOpacity>
       </View>

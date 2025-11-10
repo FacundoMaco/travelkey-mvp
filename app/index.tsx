@@ -1,29 +1,46 @@
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { Colors } from '../constants/Colors';
 import { useAuth } from '../lib/AuthContext';
 
 export default function HomeScreen() {
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Placeholder: In the future, check if user profile is complete
-    // For now, redirect to the app's main navigation
-    setTimeout(() => {
+  const redirectToMain = useCallback(() => {
+    if (!authLoading && user) {
+      // Placeholder: In the future, check if user profile is complete
+      // For now, redirect to the app's main navigation
       router.replace('/(tabs)/itinerary');
       setLoading(false);
-    }, 500);
-  }, [user]);
+    } else if (!authLoading && !user) {
+      // User not authenticated, redirect will be handled by _layout.tsx
+      setLoading(false);
+    }
+  }, [authLoading, user, router]);
 
-  if (loading) {
+  useEffect(() => {
+    redirectToMain();
+  }, [redirectToMain]);
+
+  if (loading || authLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#1a1a2e' }}>
-        <ActivityIndicator size="large" color="#0f3460" />
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color={Colors.blue} />
       </View>
     );
   }
 
   return null;
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.background,
+  },
+});

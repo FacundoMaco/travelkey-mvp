@@ -1,0 +1,102 @@
+[
+  {
+    "id": "hotel-1",
+    "name": "Hotel Boutique La Casona",
+    "description": "Un encantador hotel boutique ubicado en el corazón histórico de la ciudad. Ofrece habitaciones elegantes con decoración colonial y servicios personalizados.",
+    "price": 120,
+    "rating": 4.8,
+    "image": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400",
+    "coordinates": {
+      "latitude": -12.0464,
+      "longitude": -77.0428
+    },
+    "category": "hotel",
+    "address": "Jr. Ucayali 123, Lima Centro",
+    "phone": "+51 1 234-5678",
+    "website": "https://lacasona.com",
+    "amenities": ["WiFi", "Desayuno", "Spa", "Gimnasio", "Restaurante"],
+    "roomTypes": ["Suite", "Habitación Deluxe", "Habitación Estándar"],
+    "checkIn": "15:00",
+    "checkOut": "12:00"
+  },
+  {
+    "id": "hotel-2",
+    "name": "Eco Lodge Amazonas",
+    "description": "Sumérgete en la naturaleza en este eco-lodge sostenible rodeado de la selva amazónica. Perfecto para aventureros y amantes de la naturaleza.",
+    "price": 85,
+    "rating": 4.6,
+    "image": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400",
+    "coordinates": {
+      "latitude": -3.4653,
+      "longitude": -62.2159
+    },
+    "category": "hotel",
+    "address": "Río Amazonas, Iquitos",
+    "phone": "+51 65 123-456",
+    "website": "https://ecolodgeamazonas.com",
+    "amenities": ["WiFi", "Tours", "Restaurante", "Bar", "Piscina Natural"],
+    "roomTypes": ["Cabaña", "Suite Río", "Habitación Selva"],
+    "checkIn": "14:00",
+    "checkOut": "11:00"
+  },
+  {
+    "id": "hotel-3",
+    "name": "Machu Picchu Sanctuary Lodge",
+    "description": "El único hotel ubicado a las puertas de Machu Picchu. Ofrece una experiencia única con vistas espectaculares a las montañas andinas.",
+    "price": 350,
+    "rating": 4.9,
+    "image": "https://images.unsplash.com/photo-1520637836862-4d197d17c0a4?w=400",
+    "coordinates": {
+      "latitude": -13.1631,
+      "longitude": -72.5450
+    },
+    "category": "hotel",
+    "address": "Machu Picchu, Cusco",
+    "phone": "+51 84 211-038",
+    "website": "https://sanctuarylodge.com",
+    "amenities": ["WiFi", "Desayuno", "Restaurante", "Bar", "Spa", "Tours"],
+    "roomTypes": ["Suite Vista", "Habitación Deluxe", "Habitación Estándar"],
+    "checkIn": "15:00",
+    "checkOut": "11:00"
+  },
+  {
+    "id": "hotel-4",
+    "name": "Casa Andina Premium Arequipa",
+    "description": "Hotel de lujo en el centro histórico de Arequipa, con arquitectura colonial y modernas comodidades. Ideal para viajeros de negocios y placer.",
+    "price": 180,
+    "rating": 4.7,
+    "image": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400",
+    "coordinates": {
+      "latitude": -16.4090,
+      "longitude": -71.5375
+    },
+    "category": "hotel",
+    "address": "Calle Melgar 202, Arequipa",
+    "phone": "+51 54 600-900",
+    "website": "https://casaandina.com",
+    "amenities": ["WiFi", "Desayuno", "Spa", "Gimnasio", "Restaurante", "Bar", "Piscina"],
+    "roomTypes": ["Suite Presidencial", "Suite", "Habitación Deluxe"],
+    "checkIn": "15:00",
+    "checkOut": "12:00"
+  },
+  {
+    "id": "hotel-5",
+    "name": "Hotel Paracas Resort",
+    "description": "Resort de lujo frente al mar en la Reserva Nacional de Paracas. Ofrece actividades acuáticas y acceso directo a las Islas Ballestas.",
+    "price": 220,
+    "rating": 4.5,
+    "image": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400",
+    "coordinates": {
+      "latitude": -13.8333,
+      "longitude": -76.2500
+    },
+    "category": "hotel",
+    "address": "Reserva Nacional de Paracas, Ica",
+    "phone": "+51 56 581-333",
+    "website": "https://hotelparacas.com",
+    "amenities": ["WiFi", "Desayuno", "Spa", "Gimnasio", "Restaurante", "Bar", "Piscina", "Playa Privada"],
+    "roomTypes": ["Villa", "Suite Ocean", "Habitación Deluxe"],
+    "checkIn": "15:00",
+    "checkOut": "12:00"
+  }
+]
